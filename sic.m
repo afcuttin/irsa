@@ -1,7 +1,8 @@
-function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(inRandomAccessFrame,nonCollPcktsCol,nonCollPcktsRow)
+function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(randomAccessFrame,twinsOverhead)
 % function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(inRandomAccessFrame,nonCollPcktsCol,nonCollPcktsRow)
 %
 % perform Successive Interference Cancellation (SIC) on a given Random Access Frame for Contention Resolution Diversity Slotted Aloha
+% TODO: update function help [Issue: https://github.com/afcuttin/irsa/issues/7]
 %
 % +++ Input parameters
 % 		- inRandomAccessFrame: the matrix containing slots and packets informations
@@ -13,8 +14,22 @@ function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(inRandomAccess
 % 		- ackedPcktsCol: an array containing the column indices of acknowledged packets after SIC
 % 		- ackedPcktsRow: an array containing the row indices of acknowledged packets after SIC
 
-% TODO: a maximum number of iterations should be available as an input parameter [Issue: https://github.com/afcuttin/crdsa/issues/6]
-% According to Casini et al., 2007, pag.1415 the choice of N-max-iter = 10 appears to achieve most of the CRDSA recursive algorithm potential gain.
+acked_col=find(sum(randomAccessFrame>0)==1); % find slot indices of packets without collisions
+if numel(acked_col) > 0
+ %        % in this circumstance, there is no need to  perform SIC, because the number of the acknowledged packets is exaclty two times the number of active sources, thus saving computing time
+ %        [row_c,col_c,twinSlotId] = find(randomAccessFrame);
+ %      row=transpose(row_c);
+ %      col=transpose(col_c);
+ %      [~,col_ind]=ismember(acked_col,col);
+ %      acked_row = row(col_ind); % find source indices of packets without collisions
+ %        [sicRAF,sicCol,sicRow] = sic(randomAccessFrame,acked_col,acked_row); % do the Successive Interference Cancellation
+ %    elseif numel(acked_col) == 0
+ %        % sicRAF = randomAccessFrame;
+ %        sicCol = [];
+ %        sicRow = [];
+ %    end
+
+
 
 nonCollPacketIdx = 1;
 while nonCollPacketIdx <= numel(nonCollPcktsCol)
