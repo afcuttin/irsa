@@ -1,14 +1,11 @@
 clear all;
 % TODO: evolve from script to function [Issue: https://github.com/afcuttin/irsa/issues/3]
 % sourceNumber = 200;
-sourceNumber = 10;
-% randomAccessFrameLength = 100; % Casini et al., 2007, pag.1413
-randomAccessFrameLength = 9; % Casini et al., 2007, pag.1413
-% simulationTime = 1e4; % total number of RAF
-simulationTime = 1; % total number of RAF
-% packetReadyProb = 3.2988e-1;
-packetReadyProb = .6;
-maxRepetitionRate = 4;
+sourceNumber = 200;
+randomAccessFrameLength = 200; % Liva, 2011, pag. 482
+simulationTime = 1e3; % total number of RAF
+packetReadyProb = .5;
+maxRepetitionRate = 16;
 % lossy = true;
 
 % check for errors
@@ -30,16 +27,16 @@ pcktGenerationTimestamp = zeros(1,sourceNumber);
 currentRAF = 0;
 
 while currentRAF < simulationTime
-    randomAccessFrame = zeros(sourceNumber,randomAccessFrameLength) % later on referred to as RAF
+    randomAccessFrame = zeros(sourceNumber,randomAccessFrameLength); % later on referred to as RAF
     twinsOverhead = cell(sourceNumber,randomAccessFrameLength);
-    currentRAF = currentRAF + 1
+    currentRAF = currentRAF + 1;
 
     for eachSource1 = 1:sourceNumber % create the RAF
         if sourceStatus(1,eachSource1) == 0 && rand(1) <= packetReadyProb % new packet
-            sourceStatus(1,eachSource1) = 1
-            pcktGenerationTimestamp(1,eachSource1) = currentRAF
-            pcktRepetitionExp = rand(1)
-            pcktTwins=randi(randomAccessFrameLength) % generate first random slot (seed)
+            sourceStatus(1,eachSource1) = 1;
+            pcktGenerationTimestamp(1,eachSource1) = currentRAF;
+            pcktRepetitionExp = rand(1);
+            pcktTwins=randi(randomAccessFrameLength); % generate first random slot (seed)
             switch maxRepetitionRate
                 case 4
                     if pcktRepetitionExp <= 0.5102

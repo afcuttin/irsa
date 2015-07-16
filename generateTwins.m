@@ -7,11 +7,10 @@ while length(seed) < numberOfTwins
     while ismember(candidateSlot,seed)
         candidateSlot = randi(randomAccessFrameLength);
     end
-    seed = [seed,candidateSlot];
+    seed = [seed,candidateSlot]; % TODO: The variable 'seed' appears to change size on every loop iteration. Consider preallocating for speed. [Issue: https://github.com/afcuttin/irsa/issues/8]
 end
-pcktTwins = seed
+pcktTwins = seed;
 for i = 1:length(pcktTwins)
-	twinsPointers = setdiff(pcktTwins,pcktTwins(i))
-	rafRow{pcktTwins(i)} = twinsPointers
+	twinsPointers = setdiff(pcktTwins,pcktTwins(i)); % TODO: the setdiff function takes a lot of time; sorting pkctTwins could help? [Issue: https://github.com/afcuttin/irsa/issues/9]
+	rafRow{pcktTwins(i)} = twinsPointers;
 end
-rafRow
