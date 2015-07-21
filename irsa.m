@@ -1,4 +1,4 @@
-function [loadNorm,throughputNorm,packetLossRatio] = irsa(sourceNumber,randomAccessFrameLength,packetReadyProb,maxRepetitionRate,simulationTime)
+function [loadNorm,throughputNorm,packetLossRatio] = irsa(sourceNumber,randomAccessFrameLength,packetReadyProb,maxRepetitionRate,simulationTime,maxIter)
 % function [normalized network load,normalized network throughput,packet loss ratio] = sic(source number,random access frame length, packet ready probability, maximum repetition rate, simulation time)
 
 % check for errors
@@ -19,6 +19,10 @@ sourceBackoff = zeros(1,sourceNumber);
 % 2: source is backlogged due to previous packets collision
 pcktGenerationTimestamp = zeros(1,sourceNumber);
 currentRAF = 0;
+
+if ~exist('maxIter','var')
+    warning('Performing complete interference cancellation.')
+end
 
 while currentRAF < simulationTime
     randomAccessFrame = zeros(sourceNumber,randomAccessFrameLength); % later on referred to as RAF
@@ -168,7 +172,11 @@ while currentRAF < simulationTime
         end
     end
 
-    [sicRAF,sicCol,sicRow] = sic(randomAccessFrame,twinsOverhead); % do the Successive Interference Cancellation
+    if ~exist('maxIter','var')
+        [sicRAF,sicCol,sicRow] = sic(randomAccessFrame,twinsOverhead); % do the Successive Interference Cancellation
+    elseif exist('maxIter','var')
+        [sicRAF,sicCol,sicRow] = sic(randomAccessFrame,twinsOverhead,maxIter); % do the Successive Interference Cancellation
+    end
 
     pcktTransmissionAttempts = pcktTransmissionAttempts + sum(sourceStatus == 1); % "the normalized MAC load G does not take into account the replicas" Casini et al., 2007, pag.1411; "The performance parameter is throughput (measured in useful packets received per slot) vs. load (measured in useful packets transmitted per slot" Casini et al., 2007, pag.1415
     ackdPacketCount = ackdPacketCount + numel(sicCol);
