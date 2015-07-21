@@ -1,18 +1,12 @@
-clear all;
-% TODO: evolve from script to function [Issue: https://github.com/afcuttin/irsa/issues/3]
-% sourceNumber = 200;
-sourceNumber = 200;
-randomAccessFrameLength = 200; % Liva, 2011, pag. 482
-simulationTime = 1e3; % total number of RAF
-packetReadyProb = .5;
-maxRepetitionRate = 16;
-% lossy = true;
+function [loadNorm,throughputNorm,packetLossRatio] = irsa(sourceNumber,randomAccessFrameLength,packetReadyProb,maxRepetitionRate,simulationTime)
+% function [normalized network load,normalized network throughput,packet loss ratio] = sic(source number,random access frame length, packet ready probability, maximum repetition rate, simulation time)
 
 % check for errors
-% TODO: check variable value - randomAccessFrameLength must be a positive integer and greater than 1 [Issue: https://github.com/afcuttin/irsa/issues/4]
+% TODO: check variable value - randomAccessFrameLength must be a positive integer and greater than maxRepetitionRate [Issue: https://github.com/afcuttin/irsa/issues/4]
 % TODO: check variable value - sourceNumber must be a positive integer [Issue: https://github.com/afcuttin/irsa/issues/6]
 % TODO: check variable value - simulationTime must be a positive integer [Issue: https://github.com/afcuttin/irsa/issues/5]
 % TODO: check variable value - packet ready probability must be a double between 0 and 1 [Issue: https://github.com/afcuttin/irsa/issues/2]
+% TODO: check variable value - maxRepetitionRate shall be one of the following values: 4, 5, 6, 8, 16 [Issue: https://github.com/afcuttin/irsa/issues/14]
 
 ackdPacketCount = 0;
 pcktTransmissionAttempts = 0;
@@ -190,8 +184,8 @@ while currentRAF < simulationTime
     sourceStatus = sourceStatus - 1; % update sources statuses
     sourceStatus(sourceStatus < 0) = 0; % idle sources stay idle (see permitted statuses above)
 end
-
-loadNorm = pcktTransmissionAttempts / (simulationTime * randomAccessFrameLength)
-throughputNorm = ackdPacketCount / (simulationTime * randomAccessFrameLength)
-pcktCollisionProb = pcktCollisionCount / (simulationTime * randomAccessFrameLength);
-packetLossRatio = 1 - ackdPacketCount / pcktTransmissionAttempts
+% TODO: if packetReadyProb = 0 packetLossRatio = NaN [Issue: https://github.com/afcuttin/irsa/issues/13]
+loadNorm = pcktTransmissionAttempts / (simulationTime * randomAccessFrameLength);
+throughputNorm = ackdPacketCount / (simulationTime * randomAccessFrameLength);
+pcktCollisionProb = pcktCollisionCount / (simulationTime * randomAccessFrameLength);;
+packetLossRatio = 1 - ackdPacketCount / pcktTransmissionAttempts;
