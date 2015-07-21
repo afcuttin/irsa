@@ -30,130 +30,129 @@ while currentRAF < simulationTime
             sourceStatus(1,eachSource1) = 1;
             pcktGenerationTimestamp(1,eachSource1) = currentRAF;
             pcktRepetitionExp = rand(1);
-            pcktTwins=randi(randomAccessFrameLength); % generate first random slot (seed)
             switch maxRepetitionRate
                 case 4
                     if pcktRepetitionExp <= 0.5102
                         % genera 2 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.5102 + 0.4898)
                         % genera 4 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,4,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,4);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     end
                 case 5
                     if pcktRepetitionExp <= 0.5631
                         % genera 2 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.5631 + 0.0436)
                         % genera 3 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,4,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,4);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.5631 + 0.0436 + 0.3933)
                         % genera 5 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,5,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,5);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     end
                 case 6
                     if pcktRepetitionExp <= 0.5465
                         % genera 2 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.5465 + 0.1623)
                         % genera 3 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,3,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,3);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.5465 + 0.1623 + 0.2912)
                         % genera 6 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,6,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,6);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     end
                 case 8
                     if pcktRepetitionExp <= 0.5
                         % genera 2 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.5 + 0.28)
                         % genera 3 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,3,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,3);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.5 + 0.28 + 0.22)
                         % genera 8 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,8,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,8);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     end
                 otherwise % case 16
                     if pcktRepetitionExp <= 0.4977
                         % genera 2 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,2);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207)
                         % genera 3 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,3,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,3);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381)
                         % genera 4 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,4,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,4);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756)
                         % genera 5 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,5,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,5);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756 + 0.0398)
                         % genera 6 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,6,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,6);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756 + 0.0398 + 0.0009)
                         % genera 7 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,7,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,7);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756 + 0.0398 + 0.0009 + 0.0088)
                         % genera 8 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,8,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,8);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756 + 0.0398 + 0.0009 + 0.0088 + 0.0068)
                         % genera 9 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,9,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,9);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756 + 0.0398 + 0.0009 + 0.0088 + 0.0068 + 0.0030)
                         % genera 11 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,11,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,11);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756 + 0.0398 + 0.0009 + 0.0088 + 0.0068 + 0.0030 + 0.0429)
                         % genera 14 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,14,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,14);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756 + 0.0398 + 0.0009 + 0.0088 + 0.0068 + 0.0030 + 0.0429 + 0.0081)
                         % genera 15 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,15,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,15);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     elseif pcktRepetitionExp <= (0.4977 + 0.2207 + 0.0381 + 0.0756 + 0.0398 + 0.0009 + 0.0088 + 0.0068 + 0.0030 + 0.0429 + 0.0081 + 0.0576)
                         % genera 16 repliche
-                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,16,pcktTwins);
+                        [pcktTwins,rafRow] = generateTwins(randomAccessFrameLength,16);
                         randomAccessFrame(eachSource1,pcktTwins) = 1;
                         twinsOverhead(eachSource1,:) = rafRow;
                     end
