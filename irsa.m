@@ -184,8 +184,12 @@ while currentRAF < simulationTime
     sourceStatus = sourceStatus - 1; % update sources statuses
     sourceStatus(sourceStatus < 0) = 0; % idle sources stay idle (see permitted statuses above)
 end
-% TODO: if packetReadyProb = 0 packetLossRatio = NaN [Issue: https://github.com/afcuttin/irsa/issues/13]
+
 loadNorm = pcktTransmissionAttempts / (simulationTime * randomAccessFrameLength);
 throughputNorm = ackdPacketCount / (simulationTime * randomAccessFrameLength);
 pcktCollisionProb = pcktCollisionCount / (simulationTime * randomAccessFrameLength);;
-packetLossRatio = 1 - ackdPacketCount / pcktTransmissionAttempts;
+if pcktTransmissionAttempts ~= 0
+    packetLossRatio = 1 - ackdPacketCount / pcktTransmissionAttempts;
+elseif pcktTransmissionAttempts == 0 && ackdPacketCount == 0
+    packetLossRatio = 0;
+end
