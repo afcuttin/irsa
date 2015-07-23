@@ -1,6 +1,4 @@
-function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(randomAccessFrame,twinsOverhead)
-% function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(inRandomAccessFrame,nonCollPcktsCol,nonCollPcktsRow)
-%
+function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(randomAccessFrame,twinsOverhead,maxIter)
 % perform Successive Interference Cancellation (SIC) on a given Random Access Frame for Contention Resolution Diversity Slotted Aloha
 % TODO: update function help [Issue: https://github.com/afcuttin/irsa/issues/7]
 %
@@ -16,18 +14,19 @@ function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(randomAccessFr
 
 nonCollPcktsCol=find(sum(randomAccessFrame>0)==1); % find slot indices of packets without collisions
 if numel(nonCollPcktsCol) == 0
-        outRandomAccessFrame = randomAccessFrame;
-        ackedPcktsCol = [];
-        ackedPcktsRow = [];
-    elseif numel(nonCollPcktsCol) > 0
-        [row_c,col_c] = find(randomAccessFrame);
-        row=transpose(row_c);
-        col=transpose(col_c);
-        [~,col_ind]=ismember(nonCollPcktsCol,col);
-        nonCollPcktsRow = row(col_ind); % find source indices of packets without collisions
+    outRandomAccessFrame = randomAccessFrame;
+    ackedPcktsCol = [];
+    ackedPcktsRow = [];
+elseif numel(nonCollPcktsCol) > 0
+    [row_c,col_c] = find(randomAccessFrame);
+    row=transpose(row_c);
+    col=transpose(col_c);
+    [~,col_ind]=ismember(nonCollPcktsCol,col);
+    nonCollPcktsRow = row(col_ind); % find source indices of packets without collisions
+    nonCollPacketIdx = 1;
 
-        nonCollPacketIdx = 1;
-        while nonCollPacketIdx <= numel(nonCollPcktsCol) % TODO: a maximum number of IC iterations should be available as an input parameter [Issue: https://github.com/afcuttin/irsa/issues/11]
+    if ~exist('maxIter','var') % complete SIC
+        while nonCollPacketIdx <= numel(nonCollPcktsCol)
             twinPcktCol = twinsOverhead{ nonCollPcktsRow(nonCollPacketIdx),nonCollPcktsCol(nonCollPacketIdx) };
             for twinPcktIdx = 1:length(twinPcktCol)
                 if sum(randomAccessFrame(:,twinPcktCol(twinPcktIdx))) > 1 % twin packet has collided
@@ -45,7 +44,44 @@ if numel(nonCollPcktsCol) == 0
             end
             nonCollPacketIdx = nonCollPacketIdx + 1;
         end
+
         outRandomAccessFrame = randomAccessFrame;
         ackedPcktsCol = nonCollPcktsCol;
         ackedPcktsRow = nonCollPcktsRow;
+
+    elseif exist('maxIter','var') % iteration limted SIC
+        while nonCollPacketIdx <= maxIter && nonCollPacketIdx <= numel(nonCollPcktsCol)
+            twinPcktCol = twinsOverhead{ nonCollPcktsRow(nonCollPacketIdx),nonCollPcktsCol(nonCollPacketIdx) };
+            for twinPcktIdx = 1:length(twinPcktCol)
+                if sum(randomAccessFrame(:,twinPcktCol(twinPcktIdx))) > 1 % twin packet has collided
+                    randomAccessFrame(nonCollPcktsRow(nonCollPacketIdx),twinPcktCol(twinPcktIdx)) = 0; % cancel interference
+                    if sum(randomAccessFrame(:,twinPcktCol(twinPcktIdx))) == 1; % check if a new package can be acknowledged, thanks to interference cancellation
+                        nonCollPcktsCol = [nonCollPcktsCol,twinPcktCol(twinPcktIdx)]; % update non collided packets indices arrays
+                        nonCollPcktsRow = [nonCollPcktsRow,find(randomAccessFrame(:,twinPcktCol(twinPcktIdx)))];
+                    end
+                elseif sum(randomAccessFrame(:,twinPcktCol(twinPcktIdx))>0) == 1 % twin packet has not collided
+                    randomAccessFrame(nonCollPcktsRow(nonCollPacketIdx),twinPcktCol(twinPcktIdx)) = 0; % cancel interference
+                    nonCollTwinInd = find(nonCollPcktsCol == twinPcktCol(twinPcktIdx));
+                    nonCollPcktsCol(nonCollTwinInd) = []; %remove the twin packet from the acked packets list
+                    nonCollPcktsRow(nonCollTwinInd) = [];
+                end
+            end
+            nonCollPacketIdx = nonCollPacketIdx + 1;
+        end
+
+        while nonCollPacketIdx <= numel(nonCollPcktsCol) % check if the remaining non collided packets are replicas, and delete them
+            twinPcktCol = twinsOverhead{ nonCollPcktsRow(nonCollPacketIdx),nonCollPcktsCol(nonCollPacketIdx) };
+            for twinPcktIdx = 1:length(twinPcktCol)
+                randomAccessFrame(nonCollPcktsRow(nonCollPacketIdx),twinPcktCol(twinPcktIdx)) = 0; % cancel interference
+                nonCollTwinInd = find(nonCollPcktsCol == twinPcktCol(twinPcktIdx));
+                nonCollPcktsCol(nonCollTwinInd) = []; %remove the twin packet from the acked packets list
+                nonCollPcktsRow(nonCollTwinInd) = [];
+            end
+            nonCollPacketIdx = nonCollPacketIdx + 1;
+        end
+
+        outRandomAccessFrame = randomAccessFrame;
+        ackedPcktsCol = nonCollPcktsCol;
+        ackedPcktsRow = nonCollPcktsRow;
+    end
 end
