@@ -1,3 +1,6 @@
+## Version 1.0.0:
+
+
 ## Version 0.1.0
  - updated online help for the functions, added value checks on function parameters
  - added maximum number of iterations to successive interference cancelation
