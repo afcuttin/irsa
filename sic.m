@@ -1,16 +1,24 @@
 function [outRandomAccessFrame,ackedPcktsCol,ackedPcktsRow] = sic(randomAccessFrame,twinsOverhead,maxIter)
 % perform Successive Interference Cancellation (SIC) on a given Random Access Frame for Contention Resolution Diversity Slotted Aloha
-% TODO: update function help [Issue: https://github.com/afcuttin/irsa/issues/7]
+%
+% [output RAF, acked packets column indices,acked packets row indices] = sic(Random Access Frame,twins overhead,max SIC iterations)
 %
 % +++ Input parameters
-% 		- inRandomAccessFrame: the matrix containing slots and packets informations
-% 		- nonCollPcktsCol: an array containing the column indices of packets that did not encounter collision (can include acked twins)
-% 		- nonCollPcktsRow: an array containing the row indices of packets that did not encounter collision (can include acked twins)
+% 		- Random Access Frame: the logical matrix containing slots and packets informations
+% 		- twins overhead: an array containing the column indices of packets that did not encounter collision (can include acked twins)
+% 		- max SIC iterations: an array containing the row indices of packets that did not encounter collision (can include acked twins)
 %
 % +++ Output parameters
-% 		- outRandomAccessFrame: the matrix containing slots and packets informations, after SIC
-% 		- ackedPcktsCol: an array containing the column indices of acknowledged packets after SIC
-% 		- ackedPcktsRow: an array containing the row indices of acknowledged packets after SIC
+% 		- output RAF: the RAF matrix containing slots and packets informations, after SIC
+% 		- acked packets column indices: an array containing the column indices of acknowledged packets after SIC
+% 		- acked packets row indices: an array containing the row indices of acknowledged packets after SIC
+
+narginchk(2,3);
+validateattributes(randomAccessFrame,{'numeric'},{'integer','nonnegative'},mfilename,'Random Access Frame',1)
+validateattributes(twinsOverhead,{'cell'},{'nonempty','numel', numel(randomAccessFrame)},mfilename,'Twins overhead',2)
+if exist('maxIter','var') % complete SIC
+    validateattributes(maxIter,{'numeric'},{'integer','positive'},mfilename,'maximum SIC iterations',3)
+end
 
 nonCollPcktsCol=find(sum(randomAccessFrame>0)==1); % find slot indices of packets without collisions
 if numel(nonCollPcktsCol) == 0

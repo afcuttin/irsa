@@ -3,10 +3,17 @@ function [loadNorm,throughputNorm,packetLossRatio] = irsa(sourceNumber,randomAcc
 
 % check for errors
 % TODO: check variable value - randomAccessFrameLength must be a positive integer and greater than maxRepetitionRate [Issue: https://github.com/afcuttin/irsa/issues/4]
-% TODO: check variable value - sourceNumber must be a positive integer [Issue: https://github.com/afcuttin/irsa/issues/6]
-% TODO: check variable value - simulationTime must be a positive integer [Issue: https://github.com/afcuttin/irsa/issues/5]
-% TODO: check variable value - packet ready probability must be a double between 0 and 1 [Issue: https://github.com/afcuttin/irsa/issues/2]
-% TODO: check variable value - maxRepetitionRate shall be one of the following values: 4, 5, 6, 8, 16 [Issue: https://github.com/afcuttin/irsa/issues/14]
+
+% narginchk(3,6);
+validateattributes(sourceNumber,{'numeric'},{'scalar','integer','positive','>' 2},mfilename,'sourceNumber',1)
+validateattributes(randomAccessFrameLength,{'numeric'},{'scalar','integer','positive','>' 2},mfilename,'randomAccessFrameLength',2)
+validateattributes(packetReadyProb,{'numeric'},{'scalar','real','>=', 0,'<=',1},mfilename,'packetReadyProb',3)
+validateattributes(maxRepetitionRate,{'numeric'},{'scalar','integer','positive','<' randomAccessFrameLength},mfilename,'maxRepetitionRate',4)
+assert(ismember(maxRepetitionRate,[4,5,6,8,16]),'The maximum repetition rate shall be equal to one of the following values: 4,5,6,8,16.')
+validateattributes(simulationTime,{'numeric'},{'scalar','integer','positive'},mfilename,'simulationTime',5)
+if exist('maxIter','var') % complete SIC
+    validateattributes(maxIter,{'numeric'},{'integer','positive'},mfilename,'maximum SIC iterations',6)
+end
 
 ackdPacketCount = 0;
 pcktTransmissionAttempts = 0;
@@ -194,7 +201,7 @@ end
 
 loadNorm = pcktTransmissionAttempts / (simulationTime * randomAccessFrameLength);
 throughputNorm = ackdPacketCount / (simulationTime * randomAccessFrameLength);
-pcktCollisionProb = pcktCollisionCount / (simulationTime * randomAccessFrameLength);;
+pcktCollisionProb = pcktCollisionCount / (simulationTime * randomAccessFrameLength);
 if pcktTransmissionAttempts ~= 0
     packetLossRatio = 1 - ackdPacketCount / pcktTransmissionAttempts;
 elseif pcktTransmissionAttempts == 0 && ackdPacketCount == 0
